@@ -1,0 +1,548 @@
+# ============================================================================
+#  Pis Code configuration
+# ============================================================================
+#
+#  This file lists EVERY option with its default value. You only need to keep
+#  the lines you want to change — anything missing falls back to the default —
+#  so feel free to delete the rest.
+#
+#  Where settings come from (later layers override earlier ones, key by key):
+#
+#    1. built-in defaults (this file shows them)
+#    2. this user file:
+#         Linux    ~/.config/pis-code/config.toml
+#         macOS    ~/Library/Application Support/pis-code/config.toml
+#         Windows  %APPDATA%\pis-code\config.toml
+#       (or the file named by $PIS_CODE_CONFIG, or `PC --config FILE`)
+#    3. a `.pis-code.toml` in the edited file's folder or any parent folder —
+#       handy for a per-project override, like .editorconfig
+#
+#  Useful commands:
+#    PC --init-config     write this file to the user location
+#    PC --print-config    show the settings in effect (all layers merged)
+#    PC --config-path     show which files are being read
+#
+#  A typo in an option name is reported at startup and that file is ignored
+#  (so a mistake is never silent). Bad values — an unknown color, an
+#  out-of-range number — are reported and replaced with the default.
+# ============================================================================
+
+
+# ----------------------------------------------------------------------------
+#  [editor] — how typing and editing behave
+# ----------------------------------------------------------------------------
+[editor]
+
+# How wide a tab character is DRAWN, in columns (1-16). Display only: the
+# file keeps its real tab character.
+tab_width = 4
+
+# What one level of indentation is, for Tab, Enter and Shift+Tab.
+#   "auto"    follow the file if it already shows a style (see
+#             detect_indentation); otherwise use the language's default:
+#             tabs for GDScript, 2 spaces for YAML, 4 spaces for the rest
+#   "spaces"  always spaces
+#   "tabs"    always tabs
+indent_style = "auto"
+
+# How many spaces make one indent level (1-16) when spaces are used and the
+# file doesn't dictate it. Leave unset to use the language's default.
+# indent_width = 4
+
+# Look at the file itself to pick tabs vs. spaces and the width: the first
+# indented line decides tabs vs. spaces, and the narrowest space indentation
+# found (2, 3, 4 or 8) is the unit, so a 2-space file stays 2-space.
+detect_indentation = true
+
+# Enter copies the current line's indentation (and goes one level deeper
+# after an opening bracket, or after a trailing ":" in Python, GDScript and
+# YAML). When false, a new line starts at column 0.
+auto_indent = true
+
+# "Smart Enter": pressing Enter right between a pair — { | } in code, or
+# <div>|</div> in HTML/XML — opens the block up with an indented line in the
+# middle. See brace_style for how the braces are laid out.
+smart_enter = true
+
+# Typing ( [ { inserts the closing one too, typing the closer types over it,
+# and Backspace between an empty pair deletes both.
+auto_close_brackets = true
+
+# The same for the quote characters " ' and `
+auto_close_quotes = true
+
+# Whether ' in particular is auto-closed. Unset means "depends on the
+# language": off for Rust (where ' marks lifetimes like &'a str) and for
+# Markdown (where it's an apostrophe), on everywhere else.
+# auto_close_single_quote = true
+
+# Typing the ">" that finishes <div> inserts </div> (HTML and XML files).
+# Void elements like <br> and <img> are skipped in HTML.
+auto_close_tags = true
+
+# Where the braces go when smart Enter splits { | }:
+#   "auto"    what suits the language: Allman for C#, JavaScript, Rust and
+#             CSS; a K&R-style split for JSON; no split for Python, GDScript
+#             and the rest (where {} is a dict, not a block)
+#   "allman"  the opening brace on its own line:   fn main()
+#                                                  {
+#                                                      |
+#                                                  }
+#   "k&r"     the opening brace stays on its line: fn main() {
+#                                                      |
+#                                                  }
+#   "off"     never split braces
+brace_style = "auto"
+
+# Lines of context kept above and below the cursor when the view scrolls
+# (0-50). 0 scrolls only when the cursor reaches the edge.
+scroll_off = 0
+
+# How many lines PageUp / PageDown move. 0 means one screenful.
+page_size = 0
+
+# Characters that count as part of a word, in addition to letters and
+# digits, for Ctrl+Left/Right and Ctrl+Backspace/Delete. Add "-" to treat
+# background-color as one word, for instance.
+word_chars = "_"
+
+# How many undo steps are kept (1-100000). Each step stores a copy of the
+# buffer, so very large files with very high limits use a lot of memory.
+undo_limit = 500
+
+
+# ----------------------------------------------------------------------------
+#  [files] — reading and writing
+# ----------------------------------------------------------------------------
+[files]
+
+# Line endings written on save.
+#   "auto"  keep what the file already uses (LF for a brand-new file)
+#   "lf"    Unix  (\n)
+#   "crlf"  Windows (\r\n)
+line_ending = "auto"
+
+# Make sure the saved file ends with a newline. When false the file is
+# written exactly as it is in the editor.
+insert_final_newline = true
+
+# Strip trailing spaces and tabs from every line when saving.
+trim_trailing_whitespace = false
+
+
+# ----------------------------------------------------------------------------
+#  [display]
+# ----------------------------------------------------------------------------
+[display]
+
+# The line-number column on the left.
+line_numbers = true
+
+# Show each line's distance from the cursor line instead of its number (the
+# cursor line itself still shows its real number).
+relative_line_numbers = false
+
+# Minimum width of the line-number column, in terminal columns, including
+# the space after the number (1-12). It grows on its own for long files.
+gutter_min_width = 4
+
+# The text cursor's shape.
+#   "default"            leave it as your terminal has it set
+#   "block"              "blinking_block"
+#   "underline"          "blinking_underline"
+#   "bar"                "blinking_bar"
+cursor_style = "default"
+
+
+# ----------------------------------------------------------------------------
+#  [status_bar] — the bar with the file name, position and messages
+# ----------------------------------------------------------------------------
+[status_bar]
+
+# "bottom" or "top".
+position = "bottom"
+
+show_file_name = true
+
+# The [+] after the file name when there are unsaved changes.
+show_modified_marker = true
+
+# "Ln 12, Col 5"
+show_cursor_position = true
+
+# "1234 chars"
+show_char_count = true
+
+# "56 lines"
+show_line_count = true
+
+# The shortcut reminder shown until the first message replaces it.
+#   "auto"   built from your real key bindings, so it stays correct after
+#            you remap keys
+#   ""       show nothing
+#   "text"   show that text instead
+hint = "auto"
+
+
+# ----------------------------------------------------------------------------
+#  [colors] — interface colors
+# ----------------------------------------------------------------------------
+#  A color is one of:
+#    a name     black red green yellow blue magenta cyan gray darkgray
+#               lightred lightgreen lightyellow lightblue lightmagenta
+#               lightcyan white
+#    a hex      "#rrggbb"
+#    a number   0-255, a palette index
+#    "default"  your terminal's own color (also lets a transparent or
+#               wallpapered terminal background show through)
+#
+#  Colors of the code itself come from the syntax theme ([syntax] below).
+[colors]
+
+# Line numbers.
+gutter = "darkgray"
+# The line number of the line the cursor is on.
+gutter_current_line = "darkgray"
+# Line numbers of lines with a check error / warning (see [check]).
+gutter_error = "red"
+gutter_warning = "yellow"
+
+# The underline drawn under the exact spot a check error / warning points at.
+diagnostic_error = "red"
+diagnostic_warning = "yellow"
+
+# The status bar normally, and when it is showing an error.
+status_fg = "black"
+status_bg = "#7aa2f7"
+status_error_fg = "white"
+status_error_bg = "#8b2f2f"
+
+# How selected text looks:
+#   "reverse"    swap foreground and background
+#   "underline"  or "bold"
+#   a color      use it as the background, e.g. "#264f78"
+selection = "reverse"
+
+# Find (Ctrl+F): every hit gets this background; the current one gets its own
+# background and text color so it stands out.
+search_match = "#58511f"
+search_current = "#f0a030"
+search_current_text = "black"
+
+
+# ----------------------------------------------------------------------------
+#  [mouse] — clicking, selecting and scrolling with the mouse
+# ----------------------------------------------------------------------------
+#  Click puts the cursor there, dragging selects text (never the line numbers),
+#  double-click selects a word, triple-click a line, clicking a line number
+#  moves to that line, and the wheel scrolls.
+#
+#  While the editor handles the mouse, your terminal's own text selection is
+#  off — hold Shift while dragging to use it (it will include the line
+#  numbers). Set enabled = false to give the mouse back to the terminal.
+[mouse]
+
+enabled = true
+
+# Lines scrolled per wheel notch (1-50).
+scroll_lines = 3
+
+# Two clicks within this many milliseconds on the same spot count as a
+# double-click (word), three as a triple-click (line). 0 turns it off.
+double_click_ms = 400
+
+
+# ----------------------------------------------------------------------------
+#  [search] — Find (Ctrl+F)
+# ----------------------------------------------------------------------------
+#  Ctrl+F opens a find bar in place of the status bar and searches as you
+#  type. Enter, Down or F3 jump to the next hit; Up, Shift+Enter or Shift+F3
+#  to the previous one. Esc closes the bar and leaves the current hit
+#  selected. F3 keeps working with the bar closed. If text is selected on one
+#  line when you press Ctrl+F, it becomes the search text.
+#
+#  Shift+Enter and Shift+F3 only reach the editor from terminals with the
+#  Kitty keyboard protocol (Ghostty, Kitty, WezTerm, foot); everywhere else
+#  use Up. Up/Down are not configurable; the F3 keys are ([keys] below).
+#
+#  While the bar is open: Alt+C toggles case sensitivity, Alt+W whole words,
+#  Alt+R regular expressions, Ctrl+V pastes, Ctrl+Backspace deletes a word.
+#  Any other editing key closes the bar and does its usual job. The bar shows
+#  [Aa] [W] [.*] in brackets when that option is on.
+#
+#  Matching is line by line: a search can't span a line break.
+[search]
+
+# Letter case:
+#   "smart"        ignore case, unless the text has a capital letter
+#   "sensitive"    always match case
+#   "insensitive"  never
+case = "smart"
+
+# Start with regular-expression mode / whole-word mode on. (The bar's toggles
+# change them for the rest of the session.)
+regex = false
+whole_word = false
+
+# After the last hit, Enter goes back to the first (and the reverse).
+wrap_around = true
+
+# Jump to the first hit as you type. Off: the hits are only counted until you
+# press Enter.
+incremental = true
+
+# Esc leaves the current hit selected, so typing replaces it. Off: Esc just
+# puts the cursor at its start.
+select_on_close = true
+
+# Paint all the hits in the text while the bar is open.
+highlight_matches = true
+
+
+# ----------------------------------------------------------------------------
+#  [syntax] — syntax highlighting
+# ----------------------------------------------------------------------------
+[syntax]
+
+# Turn highlighting off entirely (everything then uses your terminal's
+# colors). Single languages can be switched off in [languages.<id>] below.
+# Files of types Pis Code doesn't know are never highlighted.
+enabled = true
+
+# The color theme for code. Bundled themes:
+#   "base16-ocean.dark"   "base16-ocean.light"   "base16-eighties.dark"
+#   "base16-mocha.dark"   "InspiredGitHub"       "Solarized (dark)"
+#   "Solarized (light)"
+theme = "base16-ocean.dark"
+
+
+# ----------------------------------------------------------------------------
+#  [check] — the error check on Ctrl+Shift+S
+# ----------------------------------------------------------------------------
+#  Saves the file, then runs the language's own checker in the background and
+#  marks the errors it finds:
+#    C#          `dotnet build`
+#    C, C++      the C / C++ compiler in syntax-only mode (`-fsyntax-only -Wall`)
+#    Java        `javac`            Go     `go vet`
+#    PHP         `php -l`           TypeScript  `tsc --noEmit`
+#    Kotlin      `kotlinc`          Swift  `swiftc -typecheck`
+#    Rust        `cargo check` (or `rustc` for a loose file)
+#    JavaScript  `node --check`     Python `py_compile`
+#    GDScript    Godot's `--check-only`
+#    JSON, YAML  parsed in-process  HTML, XML  a built-in tag checker
+#  CSS, Markdown, Objective-C, Dart and Scala have no checker.
+[check]
+
+# Master switch for all checking.
+enabled = true
+
+# Also run the check automatically after every plain save (Ctrl+S), not only
+# on Ctrl+Shift+S.
+on_save = false
+
+# Give up on a check that runs longer than this many seconds.
+timeout_seconds = 300
+
+# Color the line numbers of lines with problems.
+mark_gutter = true
+
+# Underline the exact spot each problem points at.
+underline = true
+
+# The target framework for a loose C# file's throwaway project. "auto" uses
+# the installed SDK's version (net8.0, net9.0, ...); set e.g. "net8.0" to pin.
+dotnet_target_framework = "auto"
+
+# The edition passed to `rustc` when checking a loose Rust file (one that
+# isn't inside a Cargo project).
+rust_edition = "2021"
+
+# Extra arguments for the C and C++ compilers, for include paths, a language
+# standard and the like. They run from the file's own folder, so relative
+# paths are relative to it. Example:
+#   c_flags = ["-I../include", "-std=c11", "-DDEBUG"]
+c_flags = []
+cpp_flags = []
+
+
+# ----------------------------------------------------------------------------
+#  [tools] — programs the checks run
+# ----------------------------------------------------------------------------
+#  Give a full path if a tool isn't on your PATH, e.g.
+#    godot = "/opt/godot/Godot_v4.3-stable_linux.x86_64"
+#    python = "C:\\Python312\\python.exe"
+[tools]
+
+dotnet = "dotnet"
+cargo = "cargo"
+rustc = "rustc"
+node = "node"
+
+# Empty means "look for it": python3, then python.
+python = ""
+
+# Empty means "look for it": godot4, then godot.
+godot = ""
+
+# Empty means "look for it": cc, gcc, clang  /  c++, g++, clang++.
+cc = ""
+cxx = ""
+
+go = "go"
+javac = "javac"
+php = "php"
+tsc = "tsc"
+kotlinc = "kotlinc"
+swiftc = "swiftc"
+
+
+# ----------------------------------------------------------------------------
+#  [keys] — key bindings
+# ----------------------------------------------------------------------------
+#  Each action takes a LIST of keys; any of them triggers it. Setting a list
+#  replaces that action's defaults, and an empty list ([]) unbinds it.
+#
+#  A key is written  modifier+modifier+key  in any case:
+#    modifiers   ctrl  shift  alt  super (super only on terminals that report it)
+#    keys        a single character; enter tab backtab backspace delete insert
+#                esc space plus minus; left right up down home end pageup
+#                pagedown; f1 ... f24
+#  Examples:  "ctrl+s"   "ctrl+shift+s"   "alt+backspace"   "f2"   "shift+tab"
+#
+#  Shortcuts work on the Russian layout too: Ctrl+Ы is Ctrl+S, Ctrl+Я is
+#  Ctrl+Z, and so on — a binding is a key position, not a letter. (This
+#  needs the terminal to report Ctrl+<Russian letter>; most do. Plain typing
+#  is never affected.) A binding may be written in either layout: "ctrl+ы"
+#  is "ctrl+s".
+#
+#  Cursor movements also select when Shift is added — shift+left,
+#  ctrl+shift+left, shift+pagedown... — with no extra binding needed.
+#
+#  Terminals can only report some chords. In particular, ctrl+shift+<letter>
+#  and ctrl+backspace need a terminal that supports the Kitty keyboard
+#  protocol (Ghostty, Kitty, WezTerm, foot); that's why delete_word_backward
+#  also lists ctrl+h (what most other terminals send for ctrl+backspace),
+#  ctrl+w and alt+backspace. If a chord doesn't work in your terminal, bind
+#  something it can send, such as an F-key.
+[keys]
+
+save = ["ctrl+s"]
+save_and_check = ["ctrl+shift+s"]
+quit = ["ctrl+q"]
+
+undo = ["ctrl+z"]
+redo = ["ctrl+y"]
+
+select_all = ["ctrl+a"]
+copy = ["ctrl+c"]
+cut = ["ctrl+x"]
+paste = ["ctrl+v"]
+
+newline = ["enter"]
+backspace = ["backspace"]
+delete = ["delete"]
+delete_word_backward = ["ctrl+backspace", "alt+backspace", "ctrl+h", "ctrl+w"]
+delete_word_forward = ["ctrl+delete"]
+
+# Tab inserts one indent level (or indents every selected line); Shift+Tab
+# removes one.
+indent = ["tab"]
+dedent = ["shift+tab"]
+
+move_left = ["left"]
+move_right = ["right"]
+move_up = ["up"]
+move_down = ["down"]
+move_home = ["home"]
+move_end = ["end"]
+page_up = ["pageup"]
+page_down = ["pagedown"]
+word_left = ["ctrl+left"]
+word_right = ["ctrl+right"]
+
+# Find. The three toggles only act while the find bar is open.
+find = ["ctrl+f"]
+find_next = ["f3"]
+find_previous = ["shift+f3"]
+find_toggle_case = ["alt+c"]
+find_toggle_whole_word = ["alt+w"]
+find_toggle_regex = ["alt+r"]
+
+
+# ----------------------------------------------------------------------------
+#  [associations] — treat other files as a known language
+# ----------------------------------------------------------------------------
+#  Maps a file extension (no dot, any case) or an exact file name to a
+#  language id. Language ids:
+#    csharp  c  cpp  objc  java  go  php  typescript  kotlin  swift  dart
+#    scala  javascript  rust  python  gdscript  html  css  json  xml  yaml
+#    markdown  plain      ("plain" = no highlighting or smart editing)
+#
+#  Out of the box these are recognized:
+#    csharp      .cs
+#    c           .c .h                      (.h is guessed to be C)
+#    cpp         .cpp .cc .cxx .c++ .hpp .hh .hxx .h++ .ipp .tpp .inl
+#    objc        .m .mm
+#    java        .java
+#    go          .go
+#    php         .php .phtml .php5 .php7 .phps
+#    typescript  .ts .tsx .mts .cts
+#    kotlin      .kt .kts
+#    swift       .swift
+#    dart        .dart
+#    scala       .scala .sc .sbt
+#    javascript  .js .mjs .cjs .jsx
+#    rust        .rs
+#    python      .py .py3 .pyw .pyi
+#    gdscript    .gd
+#    html        .html .htm .xhtml
+#    css         .css
+#    json        .json
+#    xml         .xml .svg .xaml .xsl .xslt .xsd .csproj .vbproj .fsproj
+#                .props .targets .resx .plist
+#    yaml        .yaml .yml
+#    markdown    .md .markdown .mdown
+#  Anything else is "plain".
+#
+#  Other C-style languages can borrow the closest one, e.g. GLSL shaders as
+#  C, or a C++ header with the .h extension:
+#    glsl = "c"        cu = "cpp"        h = "cpp"
+[associations]
+# vue = "html"
+# jsonc = "json"
+# Jenkinsfile = "python"
+# tscn = "plain"
+
+
+# ----------------------------------------------------------------------------
+#  [languages.<id>] — per-language overrides
+# ----------------------------------------------------------------------------
+#  Any of these options can be set for a single language, and then beats both
+#  the global value above and the language's own built-in default:
+#
+#    tab_width  indent_style  indent_width  auto_indent  smart_enter
+#    auto_close_brackets  auto_close_quotes  auto_close_single_quote
+#    auto_close_tags  brace_style  word_chars
+#    line_ending  insert_final_newline  trim_trailing_whitespace
+#    highlight  (false = no syntax colors for this language)
+#    check      (false = no error check for this language)
+#
+#  Examples (remove the leading # to use):
+#
+#  [languages.python]
+#  indent_style = "spaces"
+#  indent_width = 4
+#  trim_trailing_whitespace = true
+#
+#  [languages.csharp]
+#  line_ending = "crlf"
+#
+#  [languages.rust]
+#  brace_style = "k&r"        # rustfmt's own style
+#
+#  [languages.css]
+#  word_chars = "_-"          # background-color is one word
+#
+#  [languages.markdown]
+#  highlight = false
+#  trim_trailing_whitespace = false   # trailing double-space is a line break

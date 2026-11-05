@@ -1,0 +1,163 @@
+%YAML 1.2
+---
+# A template for C-family languages that syntect's bundled set lacks
+# (TypeScript, Kotlin, Swift, Dart). The @@NAME@@ markers are filled in from
+# a per-language keyword table in syntax/mod.rs before the grammar is loaded.
+name: @@NAME@@
+file_extensions:
+  - @@EXT@@
+scope: source.@@SCOPE@@
+
+variables:
+  ident: '[A-Za-z_$][A-Za-z0-9_$]*'
+
+contexts:
+  main:
+    - include: comments
+    - include: strings
+    - include: annotations
+    - include: declarations
+    - include: keywords
+    - include: constants
+    - include: numbers
+    - include: types
+    - include: functions
+    - include: operators
+
+  comments:
+    - match: '//.*$'
+      scope: comment.line.double-slash.@@SCOPE@@
+    - match: '/\*'
+      scope: punctuation.definition.comment.begin.@@SCOPE@@
+      push: block_comment
+
+  block_comment:
+    - meta_scope: comment.block.@@SCOPE@@
+    - match: '\*/'
+      scope: punctuation.definition.comment.end.@@SCOPE@@
+      pop: true
+
+  strings:
+    - match: '"""'
+      scope: punctuation.definition.string.begin.@@SCOPE@@
+      push: string_triple_double
+    - match: "'''"
+      scope: punctuation.definition.string.begin.@@SCOPE@@
+      push: string_triple_single
+    - match: '"'
+      scope: punctuation.definition.string.begin.@@SCOPE@@
+      push: string_double
+    - match: "'"
+      scope: punctuation.definition.string.begin.@@SCOPE@@
+      push: string_single
+    - match: '`'
+      scope: punctuation.definition.string.begin.@@SCOPE@@
+      push: string_backtick
+
+  string_triple_double:
+    - meta_scope: string.quoted.double.block.@@SCOPE@@
+    - match: '"""'
+      scope: punctuation.definition.string.end.@@SCOPE@@
+      pop: true
+    - include: string_content
+
+  string_triple_single:
+    - meta_scope: string.quoted.single.block.@@SCOPE@@
+    - match: "'''"
+      scope: punctuation.definition.string.end.@@SCOPE@@
+      pop: true
+    - include: string_content
+
+  # Single-line strings end at the closing quote, or give up at end of
+  # line if it's missing, so one unterminated quote can't swallow the file.
+  string_double:
+    - meta_scope: string.quoted.double.@@SCOPE@@
+    - match: '"'
+      scope: punctuation.definition.string.end.@@SCOPE@@
+      pop: true
+    - match: '(?=\n)'
+      pop: true
+    - include: string_content
+
+  string_single:
+    - meta_scope: string.quoted.single.@@SCOPE@@
+    - match: "'"
+      scope: punctuation.definition.string.end.@@SCOPE@@
+      pop: true
+    - match: '(?=\n)'
+      pop: true
+    - include: string_content
+
+  # Template literals and Kotlin's `quoted names` can span lines.
+  string_backtick:
+    - meta_scope: string.quoted.other.@@SCOPE@@
+    - match: '`'
+      scope: punctuation.definition.string.end.@@SCOPE@@
+      pop: true
+    - include: string_content
+
+  string_content:
+    - match: '\\(?:[abfnrtv\\"''`$0]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|u\{[0-9a-fA-F]+\}|U[0-9a-fA-F]{8}|\n)'
+      scope: constant.character.escape.@@SCOPE@@
+    # Interpolation: ${expr} (TS, Kotlin, Dart), $name (Kotlin, Dart),
+    # \(expr) (Swift).
+    - match: '\$\{[^}\n]*\}|\$[A-Za-z_][A-Za-z0-9_]*|\\\([^)\n]*\)'
+      scope: constant.other.placeholder.@@SCOPE@@
+
+  annotations:
+    - match: '@{{ident}}'
+      scope: storage.type.annotation.@@SCOPE@@
+
+  declarations:
+    - match: '\b(@@FUNC_KW@@)\s+({{ident}})'
+      captures:
+        1: storage.type.function.@@SCOPE@@
+        2: entity.name.function.@@SCOPE@@
+    - match: '\b(@@CLASS_KW@@)\s+({{ident}})'
+      captures:
+        1: storage.type.class.@@SCOPE@@
+        2: entity.name.class.@@SCOPE@@
+    - match: '(?<!\.)\b(?:@@STORAGE@@)\b'
+      scope: storage.type.@@SCOPE@@
+    - match: '(?<!\.)\b(?:@@MODIFIERS@@)\b'
+      scope: storage.modifier.@@SCOPE@@
+
+  keywords:
+    - match: '(?<!\.)\b(?:@@CONTROL@@)\b'
+      scope: keyword.control.@@SCOPE@@
+    - match: '(?<!\.)\b(?:@@OPERATOR_WORDS@@)\b'
+      scope: keyword.operator.word.@@SCOPE@@
+    - match: '\b(?:@@SELF@@)\b'
+      scope: variable.language.@@SCOPE@@
+
+  constants:
+    - match: '\b(?:@@CONSTANTS@@)\b'
+      scope: constant.language.@@SCOPE@@
+
+  numbers:
+    - match: '\b0[xX][0-9a-fA-F_]+[uUlL]*\b'
+      scope: constant.numeric.integer.hexadecimal.@@SCOPE@@
+    - match: '\b0[bB][01_]+[uUlL]*\b'
+      scope: constant.numeric.integer.binary.@@SCOPE@@
+    - match: '(?<![\w.])(?:[0-9][0-9_]*\.[0-9][0-9_]*|\.[0-9][0-9_]*)(?:[eE][+-]?[0-9]+)?[fFdD]?|\b[0-9][0-9_]*[eE][+-]?[0-9]+[fFdD]?\b|\b[0-9][0-9_]*[fFdD]\b'
+      scope: constant.numeric.float.@@SCOPE@@
+    - match: '\b[0-9][0-9_]*[uUlLn]*\b'
+      scope: constant.numeric.integer.decimal.@@SCOPE@@
+
+  # Heuristics: UPPER_SNAKE is a constant, PascalCase a class/type, and the
+  # lowercase built-in type names come from the language's table.
+  types:
+    - match: '\b(?:@@BUILTIN_TYPES@@)\b'
+      scope: storage.type.primitive.@@SCOPE@@
+    - match: '\b[A-Z][A-Z0-9_]+\b'
+      scope: constant.other.@@SCOPE@@
+    - match: '\b[A-Z][A-Za-z0-9_]*\b'
+      scope: support.class.@@SCOPE@@
+
+  functions:
+    - match: '\b{{ident}}(?=\s*\()'
+      scope: variable.function.@@SCOPE@@
+
+  operators:
+    - match: '=>|->|\?\.|\?\?=?|\?:|::|\.\.\.?|\*\*=?|<<=?|>>>?=?|[-+*/%&|^~<>=!]=?=?'
+      scope: keyword.operator.@@SCOPE@@
